@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kings College - Event Management (Desktop)</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--y:#FFD700;--n:#16213e;--b:#0f3460;--g:#f0a500;--w:#fff;--bg:#0e1626;--card:#1a2440;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--w);overflow-x:hidden;}
+  .page{display:none;min-height:100vh;}.page.active{display:block;}
+
+  /* ---- LOGIN ---- */
+  #lp{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  #lp::before{content:'';position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(255,215,0,0.07) 0%,transparent 70%);top:-150px;right:-150px;border-radius:50%;animation:pulse 5s infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+  .lhdr{background:var(--y);width:100%;padding:14px 36px;display:flex;align-items:center;gap:18px;position:absolute;top:0;box-shadow:0 4px 24px rgba(0,0,0,0.35);}
+  .lhdr-icon{width:58px;height:58px;background:var(--n);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+  .lhdr h1{font-family:'Rajdhani',sans-serif;color:var(--n);font-size:22px;font-weight:700;line-height:1.2;}
+  .lhdr p{color:var(--b);font-size:11px;font-weight:600;}
+  .lhdr-badge{background:var(--n);color:var(--y);border-radius:10px;padding:8px 16px;text-align:center;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;line-height:1.3;margin-left:auto;flex-shrink:0;}
+
+  .lbox{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,215,0,0.18);border-radius:26px;padding:42px 48px;width:500px;position:relative;z-index:10;margin-top:120px;box-shadow:0 30px 70px rgba(0,0,0,0.5);animation:su 0.6s ease;}
+  @keyframes su{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+  .ltitle{text-align:center;font-family:'Rajdhani',sans-serif;font-size:30px;font-weight:700;color:var(--y);margin-bottom:5px;letter-spacing:1px;}
+  .lsub{text-align:center;color:rgba(255,255,255,0.42);font-size:13px;margin-bottom:28px;}
+
+  .rtog{display:flex;background:rgba(255,255,255,0.06);border-radius:12px;padding:4px;margin-bottom:24px;gap:4px;}
+  .rbtn{flex:1;padding:10px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;transition:all 0.3s;background:transparent;color:rgba(255,255,255,0.45);}
+  .rbtn.active{background:var(--y);color:var(--n);}
+
+  .fg{margin-bottom:17px;}
+  .fl{display:block;font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px;}
+  .fc{width:100%;padding:11px 16px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;color:var(--w);font-family:'Nunito',sans-serif;font-size:14px;transition:all 0.3s;outline:none;}
+  .fc:focus{border-color:var(--y);background:rgba(255,215,0,0.05);}
+  .fc::placeholder{color:rgba(255,255,255,0.2);}
+  textarea.fc{resize:vertical;min-height:72px;}
+  select.fc option{background:#1a2440;color:var(--w);}
+  .fr{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+
+  .vg{display:flex;gap:8px;}.vg .fc{flex:1;}
+  .vbtn{padding:11px 14px;background:rgba(255,215,0,0.1);border:1.5px solid var(--y);border-radius:10px;color:var(--y);font-family:'Nunito',sans-serif;font-weight:700;font-size:11.5px;cursor:pointer;white-space:nowrap;transition:all 0.3s;}
+  .vbtn:hover{background:var(--y);color:var(--n);}
+  .otp-a{display:none;margin-top:8px;}
+  .otp-m{font-size:11px;color:#5dd879;margin-top:4px;display:none;}
+
+  .dg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:4px;}
+  .dc{padding:8px 4px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.5);font-size:11px;font-weight:700;text-align:center;cursor:pointer;transition:all 0.2s;}
+  .dc.sel{background:rgba(255,215,0,0.15);border-color:var(--y);color:var(--y);}
+
+  .lbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--y),var(--g));border:none;border-radius:12px;color:var(--n);font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;cursor:pointer;margin-top:8px;letter-spacing:1px;transition:all 0.3s;box-shadow:0 8px 28px rgba(255,215,0,0.28);}
+  .lbtn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(255,215,0,0.38);}
+  .lerr{font-size:12px;color:#ff6b6b;text-align:center;margin-top:9px;display:none;}
+
+  /* ---- DESKTOP NAVBAR ---- */
+  .navbar{background:var(--y);padding:11px 36px;display:flex;align-items:center;gap:16px;box-shadow:0 4px 22px rgba(0,0,0,0.3);position:sticky;top:0;z-index:1000;}
+  .nb-logo{display:flex;align-items:center;gap:13px;flex:1;}
+  .nb-icon{width:48px;height:48px;background:var(--n);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .nb-text h2{font-family:'Rajdhani',sans-serif;color:var(--n);font-size:17px;font-weight:700;line-height:1.1;}
+  .nb-text p{color:var(--b);font-size:9.5px;font-weight:600;}
+  .nb-badge{background:var(--n);color:var(--y);border-radius:8px;padding:5px 13px;font-size:10px;font-weight:800;letter-spacing:1px;flex-shrink:0;}
+  .nb-links{display:flex;gap:6px;align-items:center;}
+  .nl{padding:9px 15px;border:none;border-radius:9px;background:rgba(22,33,62,0.1);color:var(--n);font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;}
+  .nl:hover,.nl.active{background:var(--n);color:var(--y);}
+  .nu{display:flex;align-items:center;gap:8px;background:var(--n);border-radius:20px;padding:6px 14px 6px 6px;color:var(--y);font-size:12px;font-weight:700;}
+  .nav-av{width:30px;height:30px;border-radius:50%;background:var(--y);color:var(--n);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;}
+  .logoutbtn{padding:8px 14px;border:2px solid var(--n);border-radius:8px;background:transparent;color:var(--n);font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all 0.2s;}
+  .logoutbtn:hover{background:var(--n);color:var(--y);}
+
+  /* ---- DESKTOP LAYOUT: sidebar + main ---- */
+  .app-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 72px);}
+  .sidebar{background:#111827;border-right:1px solid rgba(255,215,0,0.08);padding:24px 0;position:sticky;top:72px;height:calc(100vh - 72px);overflow-y:auto;}
+  .sb-section{padding:0 16px;margin-bottom:24px;}
+  .sb-label{font-size:10px;font-weight:800;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding:0 8px;}
+  .sb-btn{width:100%;padding:10px 14px;border:none;border-radius:10px;background:transparent;color:rgba(255,255,255,0.55);font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:9px;margin-bottom:3px;text-align:left;}
+  .sb-btn:hover{background:rgba(255,215,0,0.08);color:var(--w);}
+  .sb-btn.active{background:rgba(255,215,0,0.14);color:var(--y);}
+  .sb-btn .ic{font-size:16px;width:20px;text-align:center;}
+  .sb-divider{height:1px;background:rgba(255,255,255,0.06);margin:12px 16px;}
+  .sb-user-card{margin:16px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.12);border-radius:12px;padding:14px;}
+  .sb-user-av{width:40px;height:40px;border-radius:50%;background:var(--y);color:var(--n);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;margin:0 auto 8px;}
+  .sb-user-name{text-align:center;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--w);}
+  .sb-user-role{text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+
+  .main-panel{padding:32px 36px;background:var(--bg);}
+
+  /* ---- DESKTOP SECTION HEADER ---- */
+  .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;}
+  .sec-title{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--y);}
+  .sec-title span{color:rgba(255,255,255,0.4);font-size:15px;font-weight:400;font-family:'Nunito';margin-left:8px;}
+
+  /* ---- DESKTOP EVENTS GRID (3 columns) ---- */
+  .ev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .ev-card{background:linear-gradient(145deg,#1e2a45,#16213e);border:1px solid rgba(255,215,0,0.1);border-radius:18px;overflow:hidden;transition:all 0.3s;animation:fc 0.4s ease;}
+  @keyframes fc{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  .ev-card:hover{transform:translateY(-6px);border-color:rgba(255,215,0,0.35);box-shadow:0 24px 55px rgba(0,0,0,0.4);}
+  .ev-ch{padding:16px 18px 12px;background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(255,215,0,0.02));border-bottom:1px solid rgba(255,215,0,0.07);display:flex;justify-content:space-between;align-items:center;}
+  .dtag{background:var(--y);color:var(--n);font-size:10px;font-weight:800;padding:3px 11px;border-radius:20px;}
+  .fee-f{font-size:14px;font-weight:800;color:#5dd879;}
+  .fee-p{font-size:14px;font-weight:800;color:var(--y);}
+  .ev-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--w);margin:11px 18px 3px;}
+  .ev-type{font-size:12px;color:rgba(255,255,255,0.38);margin:0 18px 10px;}
+  .ev-meta{padding:10px 18px;display:flex;gap:14px;flex-wrap:wrap;}
+  .em{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.48);}
+  .ev-desc{padding:0 18px 14px;font-size:13px;color:rgba(255,255,255,0.48);line-height:1.55;}
+  .ev-acts{padding:13px 18px;border-top:1px solid rgba(255,255,255,0.05);display:flex;gap:9px;}
+  .apply-btn{flex:1;padding:10px;background:linear-gradient(135deg,var(--y),var(--g));border:none;border-radius:9px;color:var(--n);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+  .apply-btn:hover{transform:scale(1.03);box-shadow:0 8px 22px rgba(255,215,0,0.3);}
+  .share-btn{padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;color:rgba(255,255,255,0.5);font-size:15px;cursor:pointer;transition:all 0.2s;}
+  .share-btn:hover{background:rgba(255,255,255,0.1);}
+
+  /* ---- ADMIN DESKTOP ---- */
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+  .sc{background:linear-gradient(145deg,#1e2a45,#16213e);border:1px solid rgba(255,215,0,0.1);border-radius:14px;padding:22px;display:flex;align-items:center;gap:14px;}
+  .si{width:50px;height:50px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+  .sv{font-family:'Rajdhani',sans-serif;font-size:34px;font-weight:700;color:var(--y);line-height:1;}
+  .sl{font-size:12px;color:rgba(255,255,255,0.4);margin-top:3px;}
+
+  .atabs{display:flex;gap:6px;margin-bottom:22px;}
+  .atab{padding:9px 20px;border:1.5px solid rgba(255,215,0,0.2);border-radius:9px;background:transparent;color:rgba(255,255,255,0.48);font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;}
+  .atab.active{background:var(--y);color:var(--n);border-color:var(--y);}
+  .ap{display:none;}.ap.active{display:block;}
+
+  .twrap{background:var(--card);border:1px solid rgba(255,215,0,0.07);border-radius:16px;overflow:hidden;overflow-x:auto;}
+  .dt{width:100%;border-collapse:collapse;}
+  .dt th{background:rgba(255,215,0,0.08);color:var(--y);font-size:11.5px;font-weight:700;padding:13px 16px;text-align:left;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
+  .dt td{padding:12px 16px;font-size:13px;color:rgba(255,255,255,0.72);border-bottom:1px solid rgba(255,255,255,0.04);}
+  .dt tr:hover td{background:rgba(255,215,0,0.02);}
+
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;}
+  .bs{background:rgba(40,167,69,0.2);color:#5dd879;}
+  .bst{background:rgba(0,123,255,0.2);color:#6ab0f5;}
+  .bp{background:rgba(255,193,7,0.2);color:#ffc107;}
+
+  .aef{background:var(--card);border:1px solid rgba(255,215,0,0.1);border-radius:16px;padding:28px;margin-bottom:24px;}
+  .aef h3{font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--y);margin-bottom:20px;}
+  .abtn{padding:9px 16px;border-radius:8px;font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;cursor:pointer;border:none;transition:all 0.2s;}
+  .abtn.add{background:var(--y);color:var(--n);}
+  .abtn.add:hover{box-shadow:0 4px 16px rgba(255,215,0,0.28);}
+  .abtn.del{background:rgba(220,53,69,0.12);border:1px solid rgba(220,53,69,0.3);color:#ff6b6b;}
+  .sms-info{background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.14);border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:12.5px;color:rgba(255,255,255,0.48);}
+  .sms-info strong{color:var(--y);}
+
+  .applybox{background:rgba(255,215,0,0.04);border:1px dashed rgba(255,215,0,0.2);border-radius:12px;padding:15px;margin-bottom:10px;}
+  .abt{font-family:'Rajdhani',sans-serif;font-size:17px;color:var(--w);}
+  .abm{font-size:12px;color:rgba(255,255,255,0.42);margin-top:4px;}
+  .ss{display:inline-block;margin-top:7px;padding:4px 11px;background:rgba(255,215,0,0.1);border-radius:6px;font-size:11px;color:var(--y);}
+
+  /* ---- MODAL ---- */
+  .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:2000;align-items:center;justify-content:center;}
+  .mo.open{display:flex;}
+  .md{background:var(--card);border:1px solid rgba(255,215,0,0.2);border-radius:22px;padding:36px;width:520px;max-width:96vw;max-height:90vh;overflow-y:auto;animation:mp 0.3s ease;}
+  @keyframes mp{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+  .md h2{font-family:'Rajdhani',sans-serif;font-size:24px;color:var(--y);margin-bottom:5px;}
+  .md-sub{color:rgba(255,255,255,0.38);font-size:13px;margin-bottom:24px;}
+  .ma{display:flex;gap:10px;margin-top:20px;}
+  .mcbtn{flex:1;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:rgba(255,255,255,0.55);font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s;}
+  .mcbtn:hover{background:rgba(255,255,255,0.1);}
+  .msbtn{flex:2;padding:12px;background:linear-gradient(135deg,var(--y),var(--g));border:none;border-radius:10px;color:var(--n);font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;cursor:pointer;}
+  .msbtn:hover{box-shadow:0 8px 26px rgba(255,215,0,0.35);}
+  .ml{display:flex;flex-direction:column;gap:8px;margin-bottom:13px;}
+  .mr{display:flex;gap:8px;}.mr .fc{flex:1;}
+  .fua{border:2px dashed rgba(255,215,0,0.22);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.3s;color:rgba(255,255,255,0.35);font-size:13px;}
+  .fua:hover{border-color:var(--y);color:var(--y);background:rgba(255,215,0,0.04);}
+  .fua .ui{font-size:28px;margin-bottom:6px;}
+
+  /* TOAST */
+  .tc{position:fixed;top:90px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:9px;}
+  .toast{background:#1e2a45;border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:14px 20px;font-size:13px;color:var(--w);box-shadow:0 10px 32px rgba(0,0,0,0.4);display:flex;align-items:center;gap:9px;animation:sir 0.4s ease;min-width:280px;}
+  .toast.success{border-color:rgba(40,167,69,0.4);}
+  .toast.error{border-color:rgba(220,53,69,0.4);}
+  @keyframes sir{from{opacity:0;transform:translateX(100px)}to{opacity:1;transform:translateX(0)}}
+
+  .es{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.28);}
+  .es .ei{font-size:50px;margin-bottom:14px;}
+</style>
+</head>
+<body>
+<div class="tc" id="tc"></div>
+
+<!-- LOGIN -->
+<div id="lp" class="page active">
+  <div class="lhdr">
+    <div class="lhdr-icon">🎓</div>
+    <div style="flex:1">
+      <h1>KINGS COLLEGE OF ENGINEERING — AUTONOMOUS</h1>
+      <p>Approved by AICTE, New Delhi &nbsp;|&nbsp; Affiliated to Anna University, Chennai &nbsp;|&nbsp; Recognized under 2(f) &amp; 12B, UGC &nbsp;|&nbsp; NAAC Accredited Institution</p>
+      <p>📞 63809 89024 &nbsp;✉️ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="65060a0b11040611250e0c0b0216000b02024b0001104b0c0b">[email&#160;protected]</a> &nbsp;🌐 www.kingsengg.edu.in &nbsp;| Punalkulam, Pudukkottai Dt. - 613303. Tamil Nadu. India.</p>
+    </div>
+    <div class="lhdr-badge">KINGS<br><span style="font-size:24px;line-height:1">25</span><br>YEARS</div>
+  </div>
+  <div class="lbox">
+    <div class="ltitle">🎪 EVENT PORTAL</div>
+    <div class="lsub">Kings College of Engineering — Event Planning &amp; Registration System</div>
+    <div class="rtog">
+      <button class="rbtn active" onclick="setRole('student')" id="roleStudent">👤 Student</button>
+      <button class="rbtn" onclick="setRole('staff')" id="roleStaff">🧑‍🏫 Staff</button>
+      <button class="rbtn" onclick="setRole('admin')" id="roleAdmin">🔐 Admin</button>
+    </div>
+    <div id="gf">
+      <div class="fr">
+        <div class="fg"><label class="fl">Full Name</label><input type="text" class="fc" id="lName" placeholder="Your full name"></div>
+        <div class="fg"><label class="fl">College Name</label><input type="text" class="fc" id="lCollege" placeholder="College name"></div>
+      </div>
+      <div class="fg" id="deptBlock">
+        <label class="fl">Department (Kings Students)</label>
+        <div class="dg">
+          <div class="dc" onclick="pickDept(this,'AI&DS')">AI&amp;DS</div>
+          <div class="dc" onclick="pickDept(this,'IT')">IT</div>
+          <div class="dc" onclick="pickDept(this,'MECH')">MECH</div>
+          <div class="dc" onclick="pickDept(this,'EEE')">EEE</div>
+          <div class="dc" onclick="pickDept(this,'ECE')">ECE</div>
+          <div class="dc" onclick="pickDept(this,'CIVIL')">CIVIL</div>
+          <div class="dc" onclick="pickDept(this,'CSE')">CSE</div>
+          <div class="dc" onclick="pickDept(this,'OTHER')">Other</div>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Phone Number</label>
+        <div class="vg">
+          <input type="tel" class="fc" id="lPhone" placeholder="10-digit mobile" maxlength="10">
+          <button class="vbtn" onclick="sendOTP('phone')">Send OTP</button>
+        </div>
+        <div class="otp-a" id="pOtpA"><input type="text" class="fc" id="pOtpIn" placeholder="Enter OTP" maxlength="6"><div class="otp-m" id="pOtpM">✅ OTP sent (demo: 1234)</div></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Email Address</label>
+        <div class="vg">
+          <input type="email" class="fc" id="lEmail" placeholder="your@email.com">
+          <button class="vbtn" onclick="sendOTP('email')">Verify</button>
+        </div>
+        <div class="otp-a" id="eOtpA"><input type="text" class="fc" id="eOtpIn" placeholder="Enter OTP" maxlength="6"><div class="otp-m" id="eOtpM">✅ OTP sent (demo: 5678)</div></div>
+      </div>
+    </div>
+    <div id="af" style="display:none">
+      <div class="fg"><label class="fl">Admin Password</label><input type="password" class="fc" id="adminPass" placeholder="Enter admin password"></div>
+    </div>
+    <div class="lerr" id="lErr"></div>
+    <button class="lbtn" onclick="doLogin()">🚀 LOGIN &amp; ENTER</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="ap" class="page">
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nb-logo">
+      <div class="nb-icon">🎓</div>
+      <div class="nb-text">
+        <h2>KINGS COLLEGE OF ENGINEERING (AUTONOMOUS)</h2>
+        <p>Approved by AICTE, New Delhi &nbsp;|&nbsp; Affiliated to Anna University, Chennai &nbsp;|&nbsp; NAAC Accredited &nbsp;|&nbsp; 📞 63809 89024 &nbsp;✉️ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="87e4e8e9f3e6e4f3c7eceee9e0f4e2e9e0e0a9e2e3f2a9eee9">[email&#160;protected]</a> &nbsp;🌐 www.kingsengg.edu.in</p>
+      </div>
+    </div>
+    <div class="nb-badge">KINGS 25 YEARS</div>
+    <div class="nu">
+      <div class="nav-av" id="navAv">U</div>
+      <span id="navName">User</span>
+    </div>
+    <button class="logoutbtn" onclick="doLogout()">Logout</button>
+  </nav>
+
+  <!-- LAYOUT -->
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-user-card">
+        <div class="sb-user-av" id="sbAv">U</div>
+        <div class="sb-user-name" id="sbName">User</div>
+        <div class="sb-user-role" id="sbRole">Student</div>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-section">
+        <div class="sb-label">Navigation</div>
+        <button class="sb-btn active" onclick="showSec('home')" id="sbHome"><span class="ic">🏠</span> Events</button>
+        <button class="sb-btn" onclick="showSec('my')" id="sbMy"><span class="ic">📋</span> My Registrations</button>
+        <button class="sb-btn" onclick="showSec('admin')" id="sbAdmin" style="display:none"><span class="ic">⚙️</span> Admin Panel</button>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-section">
+        <div class="sb-label">Departments</div>
+        <button class="sb-btn" onclick="filterEvsDept('')" id="dAll"><span class="ic">🏫</span> All</button>
+        <button class="sb-btn" onclick="filterEvsDept('AI&IT')" id="dAIIT"><span class="ic">🤖</span> AI&amp;IT</button>
+        <button class="sb-btn" onclick="filterEvsDept('MECH')" id="dMECH"><span class="ic">⚙️</span> MECH</button>
+        <button class="sb-btn" onclick="filterEvsDept('EEE')" id="dEEE"><span class="ic">⚡</span> EEE</button>
+        <button class="sb-btn" onclick="filterEvsDept('ECE')" id="dECE"><span class="ic">📡</span> ECE</button>
+        <button class="sb-btn" onclick="filterEvsDept('CIVIL')" id="dCIVIL"><span class="ic">🏗️</span> CIVIL</button>
+        <button class="sb-btn" onclick="filterEvsDept('CSE')" id="dCSE"><span class="ic">💻</span> CSE</button>
+      </div>
+    </aside>
+
+    <!-- MAIN PANEL -->
+    <main class="main-panel">
+      <!-- HOME -->
+      <div id="secHome">
+        <div class="sec-hdr">
+          <div class="sec-title">🎪 Upcoming Events <span id="evCnt"></span></div>
+        </div>
+        <div class="ev-grid" id="evGrid"></div>
+      </div>
+      <!-- MY -->
+      <div id="secMy" style="display:none">
+        <div class="sec-title" style="margin-bottom:24px">📋 My Registrations</div>
+        <div id="myC"></div>
+      </div>
+      <!-- ADMIN -->
+      <div id="secAdmin" style="display:none">
+        <div class="sec-title" style="margin-bottom:24px">⚙️ Admin Dashboard</div>
+        <div class="stat-row" id="stats"></div>
+        <div class="atabs">
+          <button class="atab active" onclick="swTab('Events',this)">📅 Events</button>
+          <button class="atab" onclick="swTab('Applications',this)">📝 Applications</button>
+          <button class="atab" onclick="swTab('Users',this)">👥 Users</button>
+        </div>
+        <div class="ap active" id="panelEvents">
+          <div class="aef">
+            <h3>➕ Add New Event</h3>
+            <div class="fr">
+              <div class="fg"><label class="fl">Title</label><input type="text" class="fc" id="aTitle" placeholder="Event title"></div>
+              <div class="fg"><label class="fl">Department</label>
+                <select class="fc" id="aDept"><option>AI&IT</option><option>MECH</option><option>EEE</option><option>ECE</option><option>CIVIL</option><option>CSE</option><option>General</option></select>
+              </div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label class="fl">Type</label>
+                <select class="fc" id="aType"><option>Technical Competition</option><option>Workshop</option><option>Seminar</option><option>Hackathon</option><option>Cultural Event</option><option>Sports Event</option><option>Paper Presentation</option></select>
+              </div>
+              <div class="fg"><label class="fl">Fee (₹)</label><input type="number" class="fc" id="aFee" value="0" min="0"></div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label class="fl">Date</label><input type="date" class="fc" id="aDate"></div>
+              <div class="fg"><label class="fl">Venue</label><input type="text" class="fc" id="aVenue" placeholder="Hall / Lab"></div>
+            </div>
+            <div class="fg"><label class="fl">Description</label><textarea class="fc" id="aDesc" rows="2" placeholder="Brief description..."></textarea></div>
+            <button class="abtn add" onclick="addEv()">➕ Add Event</button>
+          </div>
+          <div class="twrap"><table class="dt"><thead><tr><th>#</th><th>Title</th><th>Dept</th><th>Type</th><th>Date</th><th>Fee</th><th>Regs</th><th>Action</th></tr></thead><tbody id="evTbody"></tbody></table></div>
+        </div>
+        <div class="ap" id="panelApplications">
+          <div class="sms-info">📱 SMS sent to <strong>+91 8220513258</strong> for every new application</div>
+          <div id="appsC"></div>
+        </div>
+        <div class="ap" id="panelUsers">
+          <div class="twrap"><table class="dt"><thead><tr><th>#</th><th>Name</th><th>Role</th><th>College</th><th>Dept</th><th>Phone</th><th>Email</th></tr></thead><tbody id="uBody"></tbody></table></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mo" id="applyModal">
+  <div class="md">
+    <h2>🎯 Register for Event</h2>
+    <div class="md-sub" id="apSub">Fill in your team details</div>
+    <div class="fg"><label class="fl">Team / Participant Name</label><input type="text" class="fc" id="apTeam" placeholder="Team name or your name"></div>
+    <div class="fg"><label class="fl">Competition Title</label><input type="text" class="fc" id="apEvTitle" readonly style="opacity:0.65"></div>
+    <div class="fg"><label class="fl">Team Size</label>
+      <select class="fc" id="apSize" onchange="buildM()">
+        <option value="1">1 — Individual</option><option value="2">2 Members</option><option value="3">3 Members</option><option value="4">4 Members</option><option value="5">5 Members</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Members (Name &amp; Contact)</label><div class="ml" id="mList"></div></div>
+    <div class="fg">
+      <label class="fl">Payment Screenshot <span style="color:rgba(255,255,255,0.3);font-weight:400">(Optional)</span></label>
+      <div class="fua" onclick="document.getElementById('payFile').click()">
+        <div class="ui">📷</div>
+        <div id="fLabel">Click to upload payment screenshot</div>
+        <div style="font-size:11px;margin-top:3px;color:rgba(255,255,255,0.2)">JPG / PNG</div>
+        <input type="file" id="payFile" accept="image/*" style="display:none" onchange="onF(this)">
+      </div>
+    </div>
+    <div class="ma">
+      <button class="mcbtn" onclick="closeM()">Cancel</button>
+      <button class="msbtn" onclick="submitApp()">✅ Submit Registration</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+// ============================================================
+// 🔥 FIREBASE CONFIG — Replace with YOUR project credentials
+// Go to: console.firebase.google.com → Project Settings → SDK
+// ============================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, updateDoc, increment }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+// 👇 PASTE YOUR FIREBASE CONFIG HERE
+const firebaseConfig = {
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "YOUR_PROJECT.firebaseapp.com",
+  projectId:         "YOUR_PROJECT_ID",
+  storageBucket:     "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId:             "YOUR_APP_ID"
+};
+
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const storage = getStorage(app);
+
+// ============================================================
+// COLLECTIONS: events | applications | users
+// ============================================================
+const COL_EVENTS = 'events';
+const COL_APPS   = 'applications';
+const COL_USERS  = 'users';
+
+const DEPT_ORDER = ['AI&IT','MECH','EEE','ECE','CIVIL','CSE','General'];
+let role='student', dept='', curUser=null, curEv=null, curDeptFilter='';
+let events=[], apps=[], users=[];
+
+// ============================================================
+// FIREBASE HELPERS
+// ============================================================
+async function fbAddDoc(col, data){
+  return await addDoc(collection(db, col), {...data, createdAt: serverTimestamp()});
+}
+async function fbGetDocs(col){
+  const snap = await getDocs(collection(db, col));
+  return snap.docs.map(d => ({...d.data(), _id: d.id}));
+}
+async function fbDeleteDoc(col, id){
+  await deleteDoc(doc(db, col, id));
+}
+async function fbIncrementRegs(eventDocId){
+  await updateDoc(doc(db, COL_EVENTS, eventDocId), { regs: increment(1) });
+}
+
+// Real-time listener for events
+function listenEvents(){
+  const q = query(collection(db, COL_EVENTS), orderBy('createdAt','asc'));
+  onSnapshot(q, snap => {
+    events = snap.docs.map(d => ({...d.data(), _id: d.id}));
+    renderEvs();
+    if(curUser?.role==='admin') renderAdmin();
+  });
+}
+// Real-time listener for applications
+function listenApps(){
+  const q = query(collection(db, COL_APPS), orderBy('createdAt','desc'));
+  onSnapshot(q, snap => {
+    apps = snap.docs.map(d => ({...d.data(), _id: d.id}));
+    if(curUser?.role==='admin') renderAdmin();
+  });
+}
+// Real-time listener for users
+function listenUsers(){
+  onSnapshot(collection(db, COL_USERS), snap => {
+    users = snap.docs.map(d => ({...d.data(), _id: d.id}));
+    if(curUser?.role==='admin') renderAdmin();
+  });
+}
+
+// Upload screenshot to Firebase Storage
+async function uploadScreenshot(file, appId){
+  const storageRef = ref(storage, `screenshots/${appId}_${file.name}`);
+  await uploadBytes(storageRef, file);
+  return await getDownloadURL(storageRef);
+}
+
+// ============================================================
+// LOADING OVERLAY
+// ============================================================
+function showLoader(msg='Loading...'){
+  let el=document.getElementById('fbLoader');
+  if(!el){
+    el=document.createElement('div');
+    el.id='fbLoader';
+    el.style.cssText='position:fixed;inset:0;background:rgba(14,22,38,0.88);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+    el.innerHTML=`<div style="width:44px;height:44px;border:4px solid rgba(255,215,0,0.2);border-top-color:#FFD700;border-radius:50%;animation:spin 0.8s linear infinite"></div><div style="color:#FFD700;font-family:Nunito,sans-serif;font-size:15px;font-weight:700">${msg}</div>`;
+    const style=document.createElement('style');
+    style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(style);
+    document.body.appendChild(el);
+  } else {
+    el.querySelector('div+div').textContent=msg;
+    el.style.display='flex';
+  }
+}
+function hideLoader(){ const el=document.getElementById('fbLoader'); if(el) el.style.display='none'; }
+
+// ============================================================
+// LOGIN
+// ============================================================
+function setRole(r){
+  role=r;
+  ['student','staff','admin'].forEach(x=>{
+    document.getElementById('role'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active',x===r);
+  });
+  document.getElementById('gf').style.display=r==='admin'?'none':'block';
+  document.getElementById('af').style.display=r==='admin'?'block':'none';
+  document.getElementById('deptBlock').style.display=r==='student'?'block':'none';
+}
+function pickDept(el,d){document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');dept=d;}
+function sendOTP(t){
+  if(t==='phone'){
+    const p=document.getElementById('lPhone').value.trim();
+    if(p.length!==10||isNaN(p)){toast('Enter valid 10-digit phone','error');return;}
+    document.getElementById('pOtpA').style.display='block';
+    document.getElementById('pOtpM').style.display='block';
+    toast('📱 Demo OTP: 1234 sent to '+p,'success');
+  }else{
+    const e=document.getElementById('lEmail').value.trim();
+    if(!e.includes('@')){toast('Enter valid email','error');return;}
+    document.getElementById('eOtpA').style.display='block';
+    document.getElementById('eOtpM').style.display='block';
+    toast('📧 Demo OTP: 5678 sent to '+e,'success');
+  }
+}
+async function doLogin(){
+  const err=document.getElementById('lErr'); err.style.display='none';
+  if(role==='admin'){
+    if(document.getElementById('adminPass').value!=='dbm123'){err.textContent='⚠️ Incorrect admin password';err.style.display='block';return;}
+    curUser={name:'Admin',role:'admin',college:'Kings College of Engineering',dept:'Admin',phone:'',email:'admin@kingsengg.edu.in'};
+    enterApp(); return;
+  }
+  const name=document.getElementById('lName').value.trim();
+  const college=document.getElementById('lCollege').value.trim();
+  const phone=document.getElementById('lPhone').value.trim();
+  const email=document.getElementById('lEmail').value.trim();
+  if(!name||!college||!phone||!email){err.textContent='⚠️ Fill all required fields';err.style.display='block';return;}
+  if(document.getElementById('pOtpA').style.display!=='block'){err.textContent='⚠️ Send phone OTP first';err.style.display='block';return;}
+  if(document.getElementById('pOtpIn').value!=='1234'){err.textContent='⚠️ Phone OTP wrong (demo:1234)';err.style.display='block';return;}
+  if(document.getElementById('eOtpA').style.display!=='block'){err.textContent='⚠️ Send email OTP first';err.style.display='block';return;}
+  if(document.getElementById('eOtpIn').value!=='5678'){err.textContent='⚠️ Email OTP wrong (demo:5678)';err.style.display='block';return;}
+  curUser={name,role,college,dept:dept||'N/A',phone,email};
+  showLoader('Saving user...');
+  try{
+    await fbAddDoc(COL_USERS,{name,role,college,dept:dept||'N/A',phone,email,joinedAt:new Date().toLocaleString('en-IN')});
+  }catch(e){console.warn('User save failed',e);}
+  hideLoader();
+  enterApp();
+}
+function enterApp(){
+  document.getElementById('lp').classList.remove('active');
+  document.getElementById('ap').classList.add('active');
+  ['navName','sbName'].forEach(id=>document.getElementById(id).textContent=curUser.name);
+  ['navAv','sbAv'].forEach(id=>document.getElementById(id).textContent=curUser.name.charAt(0).toUpperCase());
+  document.getElementById('sbRole').textContent=curUser.role.charAt(0).toUpperCase()+curUser.role.slice(1);
+  if(curUser.role==='admin'){document.getElementById('sbAdmin').style.display='flex';}
+  showLoader('Loading events...');
+  listenEvents();
+  listenApps();
+  listenUsers();
+  setTimeout(()=>{ hideLoader(); if(curUser.role==='admin') showSec('admin'); else showSec('home'); },1200);
+  toast('👋 Welcome, '+curUser.name+'!','success');
+}
+function doLogout(){
+  curUser=null;
+  ['lName','lCollege','lPhone','lEmail','adminPass','pOtpIn','eOtpIn'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['pOtpA','eOtpA'].forEach(id=>document.getElementById(id).style.display='none');
+  document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));
+  dept=''; events=[]; apps=[]; users=[];
+  document.getElementById('lp').classList.add('active');
+  document.getElementById('ap').classList.remove('active');
+  setRole('student');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showSec(s){
+  ['Home','My','Admin'].forEach(x=>document.getElementById('sec'+x).style.display='none');
+  document.getElementById('sec'+s.charAt(0).toUpperCase()+s.slice(1)).style.display='block';
+  ['sbHome','sbMy','sbAdmin'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
+  document.getElementById('sb'+s.charAt(0).toUpperCase()+s.slice(1))?.classList.add('active');
+  if(s==='admin') renderAdmin();
+  if(s==='my') renderMy();
+}
+
+function filterEvsDept(d){
+  curDeptFilter=d;
+  ['All','AIIT','MECH','EEE','ECE','CIVIL','CSE'].forEach(x=>document.getElementById('d'+x)?.classList.remove('active'));
+  const key=d===''?'All':d.replace('&','');
+  document.getElementById('d'+key)?.classList.add('active');
+  renderEvs(d);
+}
+
+// ============================================================
+// EVENTS RENDER
+// ============================================================
+function renderEvs(filter){
+  const f=filter!==undefined?filter:curDeptFilter;
+  const g=document.getElementById('evGrid');
+  let list=f?events.filter(e=>e.dept===f):[...events];
+  list.sort((a,b)=>(DEPT_ORDER.indexOf(a.dept)||99)-(DEPT_ORDER.indexOf(b.dept)||99));
+  document.getElementById('evCnt').textContent=list.length+' events';
+  if(!list.length){g.innerHTML='<div class="es"><div class="ei">🎪</div><p>No events found</p></div>';return;}
+  g.innerHTML=list.map(ev=>`
+    <div class="ev-card">
+      <div class="ev-ch">
+        <span class="dtag">${ev.dept}</span>
+        <span class="${ev.fee===0?'fee-f':'fee-p'}">${ev.fee===0?'FREE':'₹'+ev.fee}</span>
+      </div>
+      <div class="ev-title">${ev.title}</div>
+      <div class="ev-type">📌 ${ev.type}</div>
+      <div class="ev-meta">
+        <div class="em">📅 ${fd(ev.date)}</div>
+        <div class="em">📍 ${ev.venue}</div>
+        <div class="em">👥 ${ev.regs||0} registered</div>
+      </div>
+      <div class="ev-desc">${ev.desc}</div>
+      <div class="ev-acts">
+        <button class="apply-btn" onclick="openApply('${ev._id}')">🎯 Apply Now</button>
+        <button class="share-btn" onclick="shareEv('${ev._id}')">🔗</button>
+      </div>
+    </div>
+  `).join('');
+}
+function fd(d){if(!d)return'TBD';return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+function shareEv(id){
+  const ev=events.find(e=>e._id===id);
+  const t=`🎪 ${ev.title}\n📌 ${ev.type} | ${ev.dept}\n📅 ${fd(ev.date)} | 📍 ${ev.venue}\n💰 ${ev.fee===0?'FREE':'₹'+ev.fee}\n\nKings College of Engineering\n🌐 www.kingsengg.edu.in`;
+  navigator.clipboard.writeText(t); toast('📋 Copied!','success');
+}
+
+// ============================================================
+// APPLY
+// ============================================================
+function openApply(id){
+  curEv=events.find(e=>e._id===id);
+  document.getElementById('apSub').textContent=curEv.title+' — '+curEv.dept;
+  document.getElementById('apEvTitle').value=curEv.title;
+  document.getElementById('apTeam').value=curUser?.name||'';
+  document.getElementById('apSize').value='1';
+  document.getElementById('fLabel').textContent='Click to upload payment screenshot';
+  document.getElementById('payFile').value='';
+  buildM();
+  document.getElementById('applyModal').classList.add('open');
+}
+function closeM(){document.getElementById('applyModal').classList.remove('open');}
+function buildM(){
+  const n=parseInt(document.getElementById('apSize').value);
+  const l=document.getElementById('mList'); l.innerHTML='';
+  for(let i=1;i<=n;i++) l.innerHTML+=`<div class="mr"><input type="text" class="fc" placeholder="Member ${i} name" id="mn${i}"><input type="tel" class="fc" placeholder="Contact" maxlength="10" id="mp${i}"></div>`;
+}
+function onF(inp){document.getElementById('fLabel').textContent=inp.files[0]?'✅ '+inp.files[0].name:'Click to upload payment screenshot';}
+
+async function submitApp(){
+  const team=document.getElementById('apTeam').value.trim();
+  if(!team){toast('Enter team name','error');return;}
+  const n=parseInt(document.getElementById('apSize').value);
+  const members=[];
+  for(let i=1;i<=n;i++) members.push({name:document.getElementById('mn'+i)?.value.trim()||'',phone:document.getElementById('mp'+i)?.value.trim()||''});
+  const fi=document.getElementById('payFile');
+  const hasFile=fi.files&&fi.files.length>0;
+
+  showLoader('Submitting registration...');
+  try{
+    const appData={
+      evId:curEv._id, evTitle:curEv.title, evDept:curEv.dept,
+      team, members,
+      user:curUser.name, uPhone:curUser.phone, uEmail:curUser.email,
+      hasFile, fileName:hasFile?fi.files[0].name:null, screenshotUrl:null,
+      time:new Date().toLocaleString('en-IN'), status:'pending'
+    };
+    const docRef = await fbAddDoc(COL_APPS, appData);
+
+    // Upload screenshot if provided
+    if(hasFile){
+      showLoader('Uploading screenshot...');
+      const url = await uploadScreenshot(fi.files[0], docRef.id);
+      await updateDoc(doc(db, COL_APPS, docRef.id), {screenshotUrl: url});
+    }
+
+    // Increment regs count on the event
+    await fbIncrementRegs(curEv._id);
+
+    // SMS log
+    const msg=`Kings Event Registration\nEvent: ${appData.evTitle} (${appData.evDept})\nTeam: ${appData.team}\nSize: ${appData.members.length}\n${appData.members.map((m,i)=>`${i+1}. ${m.name}${m.phone?' - '+m.phone:''}`).join('\n')}\nApplicant: ${appData.user} | ${appData.uPhone}\nTime: ${appData.time}`;
+    console.log('%c📱 SMS to 8220513258:\n'+msg,'color:#FFD700;background:#16213e;padding:8px;border-radius:4px');
+    // 👉 Production: call Fast2SMS/Twilio API here
+
+    closeM();
+    toast('✅ Registration saved to Firebase! SMS logged.','success');
+  }catch(e){
+    console.error(e);
+    toast('❌ Failed to submit. Check Firebase config.','error');
+  }
+  hideLoader();
+}
+
+// ============================================================
+// MY REGISTRATIONS
+// ============================================================
+function renderMy(){
+  const c=document.getElementById('myC');
+  const mine=apps.filter(a=>a.uEmail===curUser?.email||a.user===curUser?.name);
+  if(!mine.length){c.innerHTML='<div class="es"><div class="ei">📋</div><p>No registrations yet</p></div>';return;}
+  c.innerHTML=mine.map(a=>`
+    <div class="applybox">
+      <div class="abt">🏆 ${a.team} <span class="badge bp">${a.status}</span></div>
+      <div class="abm">📌 ${a.evTitle} (${a.evDept}) &nbsp;|&nbsp; 👥 ${a.members.length} member(s) &nbsp;|&nbsp; 🕒 ${a.time}</div>
+      <div class="abm" style="margin-top:3px">Members: ${a.members.map(m=>m.name+(m.phone?' ('+m.phone+')':'')).filter(x=>x.trim()).join(', ')||'—'}</div>
+      ${a.screenshotUrl?`<a href="${a.screenshotUrl}" target="_blank"><span class="ss">📷 View Screenshot</span></a>`:(a.hasFile?`<span class="ss">📷 ${a.fileName}</span>`:'')}
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// ADMIN
+// ============================================================
+function renderAdmin(){
+  document.getElementById('stats').innerHTML=`
+    <div class="sc"><div class="si" style="background:rgba(255,215,0,0.1)">🎪</div><div><div class="sv">${events.length}</div><div class="sl">Total Events</div></div></div>
+    <div class="sc"><div class="si" style="background:rgba(40,167,69,0.1)">📝</div><div><div class="sv">${apps.length}</div><div class="sl">Applications</div></div></div>
+    <div class="sc"><div class="si" style="background:rgba(255,193,7,0.1)">⏳</div><div><div class="sv">${apps.filter(a=>a.status==='pending').length}</div><div class="sl">Pending</div></div></div>
+    <div class="sc"><div class="si" style="background:rgba(0,123,255,0.1)">👥</div><div><div class="sv">${users.length}</div><div class="sl">Users</div></div></div>
+  `;
+  document.getElementById('evTbody').innerHTML=events.map((ev,i)=>`
+    <tr>
+      <td>${i+1}</td><td><strong>${ev.title}</strong></td>
+      <td><span class="badge bs">${ev.dept}</span></td>
+      <td>${ev.type}</td><td>${fd(ev.date)}</td>
+      <td>${ev.fee===0?'<span style="color:#5dd879">FREE</span>':'₹'+ev.fee}</td>
+      <td>${ev.regs||0}</td>
+      <td><button class="abtn del" onclick="delEv('${ev._id}')">🗑</button></td>
+    </tr>
+  `).join('');
+  const ac=document.getElementById('appsC');
+  if(!apps.length){ac.innerHTML='<div class="es"><div class="ei">📝</div><p>No applications yet</p></div>';}
+  else ac.innerHTML=`<div class="twrap"><table class="dt">
+    <thead><tr><th>#</th><th>Team</th><th>Event</th><th>Members</th><th>Applicant</th><th>Phone</th><th>Screenshot</th><th>Time</th><th>Status</th></tr></thead>
+    <tbody>${apps.map((a,i)=>`<tr>
+      <td>${i+1}</td>
+      <td><strong>${a.team}</strong></td>
+      <td>${a.evTitle}<br><span style="font-size:11px;color:rgba(255,255,255,0.35)">${a.evDept}</span></td>
+      <td>${a.members.length}<br><span style="font-size:11px;color:rgba(255,255,255,0.35)">${a.members.map(m=>m.name).filter(Boolean).join(', ')}</span></td>
+      <td>${a.user}</td><td>${a.uPhone}</td>
+      <td>${a.screenshotUrl?`<a href="${a.screenshotUrl}" target="_blank" style="color:#5dd879">📷 View</a>`:(a.hasFile?'<span style="color:#ffc107">📷 Uploaded</span>':'—')}</td>
+      <td style="font-size:11px">${a.time}</td>
+      <td><span class="badge bp">${a.status}</span></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+  document.getElementById('uBody').innerHTML=users.length?users.map((u,i)=>`
+    <tr><td>${i+1}</td><td>${u.name}</td>
+    <td><span class="badge ${u.role==='staff'?'bst':'bs'}">${u.role}</span></td>
+    <td>${u.college}</td><td>${u.dept}</td><td>${u.phone}</td><td>${u.email}</td></tr>
+  `).join(''):'<tr><td colspan="7" style="text-align:center;color:rgba(255,255,255,0.3);padding:28px">No users yet</td></tr>';
+}
+function swTab(name,btn){
+  document.querySelectorAll('.atab').forEach(t=>t.classList.remove('active')); btn.classList.add('active');
+  document.querySelectorAll('.ap').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel'+name).classList.add('active');
+  renderAdmin();
+}
+async function addEv(){
+  const title=document.getElementById('aTitle').value.trim();
+  const venue=document.getElementById('aVenue').value.trim();
+  if(!title||!venue){toast('Fill title and venue','error');return;}
+  const evData={
+    title, dept:document.getElementById('aDept').value,
+    type:document.getElementById('aType').value,
+    fee:parseInt(document.getElementById('aFee').value)||0,
+    date:document.getElementById('aDate').value,
+    venue, desc:document.getElementById('aDesc').value.trim()||'No description.',
+    regs:0
+  };
+  showLoader('Adding event...');
+  try{
+    await fbAddDoc(COL_EVENTS, evData);
+    ['aTitle','aVenue','aDesc'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('aFee').value='0';
+    toast('✅ Event saved to Firebase!','success');
+  }catch(e){
+    console.error(e); toast('❌ Failed. Check Firebase config.','error');
+  }
+  hideLoader();
+}
+async function delEv(id){
+  if(!confirm('Delete this event?'))return;
+  showLoader('Deleting...');
+  try{
+    await fbDeleteDoc(COL_EVENTS, id);
+    toast('🗑️ Event deleted from Firebase','success');
+  }catch(e){toast('❌ Delete failed','error');}
+  hideLoader();
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg,type='info'){
+  const c=document.getElementById('tc'); const t=document.createElement('div');
+  t.className='toast '+(type||''); t.textContent=msg; c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(100px)';t.style.transition='0.4s';setTimeout(()=>t.remove(),400);},3500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded',()=>{
+  const td=new Date().toISOString().split('T')[0];
+  document.getElementById('aDate').min=td;
+  document.getElementById('aDate').value=td;
+  document.getElementById('dAll').classList.add('active');
+
+  // Expose functions globally for onclick handlers
+  window.setRole=setRole; window.pickDept=pickDept; window.sendOTP=sendOTP;
+  window.doLogin=doLogin; window.doLogout=doLogout; window.showSec=showSec;
+  window.filterEvsDept=filterEvsDept; window.openApply=openApply;
+  window.closeM=closeM; window.buildM=buildM; window.onF=onF;
+  window.submitApp=submitApp; window.swTab=swTab; window.addEv=addEv; window.delEv=delEv;
+  window.shareEv=shareEv;
+});
+</script>
+t

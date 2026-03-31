@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kings Events — Mobile</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--y:#FFD700;--n:#16213e;--b:#0f3460;--g:#f0a500;--w:#fff;--bg:#0e1626;--card:#1a2440;--card2:#1e2a45;}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--w);overflow-x:hidden;max-width:430px;margin:0 auto;position:relative;}
+  .page{display:none;min-height:100vh;}.page.active{display:flex;flex-direction:column;}
+
+  /* ---- MOBILE LOGIN ---- */
+  #lp{background:linear-gradient(160deg,#0d1117,#16213e,#0f3460);min-height:100vh;display:flex;flex-direction:column;align-items:stretch;}
+
+  .mob-lhdr{background:var(--y);padding:12px 16px;display:flex;align-items:center;gap:10px;}
+  .mob-lhdr-ic{width:42px;height:42px;background:var(--n);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .mob-lhdr h1{font-family:'Rajdhani',sans-serif;color:var(--n);font-size:13px;font-weight:700;line-height:1.2;flex:1;}
+  .mob-lhdr p{color:var(--b);font-size:8.5px;font-weight:600;margin-top:1px;}
+  .mob-badge{background:var(--n);color:var(--y);border-radius:7px;padding:5px 8px;text-align:center;font-family:'Rajdhani',sans-serif;font-size:8px;font-weight:700;line-height:1.3;flex-shrink:0;}
+
+  .mob-lbody{flex:1;padding:20px 18px 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .mob-ltitle{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--y);text-align:center;margin-bottom:4px;letter-spacing:1px;}
+  .mob-lsub{text-align:center;color:rgba(255,255,255,0.4);font-size:12px;margin-bottom:22px;line-height:1.4;}
+
+  .rtog{display:flex;background:rgba(255,255,255,0.07);border-radius:12px;padding:4px;margin-bottom:20px;gap:3px;width:100%;}
+  .rbtn{flex:1;padding:10px 6px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;transition:all 0.3s;background:transparent;color:rgba(255,255,255,0.42);}
+  .rbtn.active{background:var(--y);color:var(--n);}
+
+  .lform{width:100%;}
+  .fg{margin-bottom:14px;}
+  .fl{display:block;font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.7px;}
+  .fc{width:100%;padding:12px 14px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.1);border-radius:11px;color:var(--w);font-family:'Nunito',sans-serif;font-size:15px;transition:all 0.3s;outline:none;}
+  .fc:focus{border-color:var(--y);background:rgba(255,215,0,0.06);}
+  .fc::placeholder{color:rgba(255,255,255,0.2);}
+  textarea.fc{resize:none;min-height:64px;}
+  select.fc option{background:#1a2440;color:var(--w);}
+
+  .vg{display:flex;gap:8px;}.vg .fc{flex:1;}
+  .vbtn{padding:12px 11px;background:rgba(255,215,0,0.1);border:1.5px solid var(--y);border-radius:11px;color:var(--y);font-family:'Nunito',sans-serif;font-weight:700;font-size:11px;cursor:pointer;white-space:nowrap;}
+  .otp-a{display:none;margin-top:7px;}
+  .otp-m{font-size:10.5px;color:#5dd879;margin-top:3px;display:none;}
+
+  .dg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px;}
+  .dc{padding:9px 4px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.5);font-size:10.5px;font-weight:700;text-align:center;cursor:pointer;transition:all 0.2s;}
+  .dc.sel{background:rgba(255,215,0,0.15);border-color:var(--y);color:var(--y);}
+
+  .lbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--y),var(--g));border:none;border-radius:13px;color:var(--n);font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;cursor:pointer;margin-top:6px;letter-spacing:1px;box-shadow:0 8px 26px rgba(255,215,0,0.28);}
+  .lerr{font-size:11.5px;color:#ff6b6b;text-align:center;margin-top:8px;display:none;}
+
+  /* ---- MOBILE APP ---- */
+  #ap{background:var(--bg);}
+
+  /* MOBILE TOP HEADER */
+  .mob-hdr{background:var(--y);padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 3px 16px rgba(0,0,0,0.35);}
+  .mob-hdr-ic{width:36px;height:36px;background:var(--n);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .mob-hdr-txt{flex:1;min-width:0;}
+  .mob-hdr-txt h2{font-family:'Rajdhani',sans-serif;color:var(--n);font-size:13px;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .mob-hdr-txt p{color:var(--b);font-size:8px;font-weight:600;}
+  .mob-hdr-right{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+  .mob-av{width:30px;height:30px;border-radius:50%;background:var(--n);color:var(--y);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;}
+  .mob-out{padding:6px 10px;border:2px solid var(--n);border-radius:7px;background:transparent;color:var(--n);font-family:'Nunito',sans-serif;font-weight:700;font-size:11px;cursor:pointer;}
+
+  /* MAIN SCROLL AREA */
+  .mob-main{flex:1;overflow-y:auto;padding:16px 14px 80px;}
+
+  /* DEPT SCROLL TABS */
+  .dept-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 0 4px;margin-bottom:18px;-ms-overflow-style:none;scrollbar-width:none;}
+  .dept-scroll::-webkit-scrollbar{display:none;}
+  .dtab{padding:8px 14px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:20px;color:rgba(255,255,255,0.5);font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;white-space:nowrap;cursor:pointer;flex-shrink:0;transition:all 0.2s;}
+  .dtab.active{background:var(--y);color:var(--n);border-color:var(--y);}
+
+  /* MOBILE EVENT CARDS (full width, stacked) */
+  .mob-ev-list{display:flex;flex-direction:column;gap:14px;}
+  .mev{background:linear-gradient(145deg,var(--card2),var(--card));border:1px solid rgba(255,215,0,0.1);border-radius:16px;overflow:hidden;animation:fc 0.4s ease;}
+  @keyframes fc{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .mev-top{padding:13px 15px 10px;background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(255,215,0,0.02));border-bottom:1px solid rgba(255,215,0,0.07);display:flex;justify-content:space-between;align-items:center;}
+  .dtag{background:var(--y);color:var(--n);font-size:9.5px;font-weight:800;padding:3px 10px;border-radius:20px;}
+  .fee-f{font-size:13px;font-weight:800;color:#5dd879;}
+  .fee-p{font-size:13px;font-weight:800;color:var(--y);}
+  .mev-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--w);padding:10px 15px 2px;}
+  .mev-type{font-size:11.5px;color:rgba(255,255,255,0.38);padding:0 15px 9px;}
+  .mev-meta{padding:8px 15px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.04);}
+  .mm{display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(255,255,255,0.45);}
+  .mev-desc{padding:8px 15px 12px;font-size:12.5px;color:rgba(255,255,255,0.45);line-height:1.5;}
+  .mev-act{padding:12px 15px;border-top:1px solid rgba(255,255,255,0.05);display:flex;gap:8px;}
+  .apply-btn{flex:1;padding:11px;background:linear-gradient(135deg,var(--y),var(--g));border:none;border-radius:10px;color:var(--n);font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;cursor:pointer;}
+  .share-btn{padding:11px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:rgba(255,255,255,0.5);font-size:15px;cursor:pointer;}
+
+  /* BOTTOM NAV */
+  .bot-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#111827;border-top:1px solid rgba(255,215,0,0.1);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom);}
+  .bn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:transparent;color:rgba(255,255,255,0.38);font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+  .bn.active{color:var(--y);}
+  .bn .bic{font-size:22px;line-height:1;}
+  .bn-admin{display:none;}
+
+  /* SEC TITLE */
+  .stitle{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--y);margin-bottom:16px;}
+
+  /* MY REGS */
+  .abox{background:rgba(255,215,0,0.04);border:1px dashed rgba(255,215,0,0.2);border-radius:12px;padding:14px;margin-bottom:10px;}
+  .abt{font-family:'Rajdhani',sans-serif;font-size:16px;color:var(--w);}
+  .abm{font-size:11.5px;color:rgba(255,255,255,0.42);margin-top:3px;line-height:1.5;}
+  .ss-tag{display:inline-block;margin-top:6px;padding:3px 10px;background:rgba(255,215,0,0.1);border-radius:6px;font-size:11px;color:var(--y);}
+
+  /* ADMIN MOBILE */
+  .mob-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+  .msc{background:linear-gradient(145deg,var(--card2),var(--card));border:1px solid rgba(255,215,0,0.1);border-radius:13px;padding:16px;display:flex;align-items:center;gap:12px;}
+  .msi{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .msv{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--y);line-height:1;}
+  .msl{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+
+  .matabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:16px;-ms-overflow-style:none;scrollbar-width:none;}
+  .matabs::-webkit-scrollbar{display:none;}
+  .matab{padding:8px 16px;border:1.5px solid rgba(255,215,0,0.2);border-radius:8px;background:transparent;color:rgba(255,255,255,0.45);font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;}
+  .matab.active{background:var(--y);color:var(--n);border-color:var(--y);}
+  .map{display:none;}.map.active{display:block;}
+
+  .mob-add-form{background:var(--card);border:1px solid rgba(255,215,0,0.1);border-radius:14px;padding:18px;margin-bottom:16px;}
+  .mob-add-form h3{font-family:'Rajdhani',sans-serif;font-size:17px;color:var(--y);margin-bottom:16px;}
+  .abtn{padding:11px 16px;border-radius:9px;font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;cursor:pointer;border:none;transition:all 0.2s;}
+  .abtn.add{background:var(--y);color:var(--n);width:100%;}
+  .abtn.del{background:rgba(220,53,69,0.12);border:1px solid rgba(220,53,69,0.3);color:#ff6b6b;padding:6px 12px;font-size:12px;}
+  .sms-info{background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.12);border-radius:9px;padding:10px 13px;margin-bottom:14px;font-size:11.5px;color:rgba(255,255,255,0.45);}
+  .sms-info strong{color:var(--y);}
+
+  .mob-app-card{background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.1);border-radius:12px;padding:13px;margin-bottom:10px;}
+  .mac-title{font-family:'Rajdhani',sans-serif;font-size:15px;color:var(--w);}
+  .mac-meta{font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;line-height:1.6;}
+  .mac-ss{display:inline-block;margin-top:5px;padding:3px 10px;background:rgba(255,215,0,0.1);border-radius:6px;font-size:10.5px;color:var(--y);}
+  .mac-actions{display:flex;justify-content:flex-end;margin-top:8px;}
+
+  .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:9.5px;font-weight:800;}
+  .bs{background:rgba(40,167,69,0.2);color:#5dd879;}
+  .bst{background:rgba(0,123,255,0.2);color:#6ab0f5;}
+  .bp{background:rgba(255,193,7,0.2);color:#ffc107;}
+
+  .mob-user-card{background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.1);border-radius:12px;padding:13px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+  .muc-av{width:38px;height:38px;border-radius:50%;background:var(--y);color:var(--n);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;flex-shrink:0;}
+  .muc-name{font-family:'Rajdhani',sans-serif;font-size:16px;color:var(--w);}
+  .muc-info{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+
+  /* MODAL MOBILE */
+  .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:300;align-items:flex-end;justify-content:center;}
+  .mo.open{display:flex;}
+  .md{background:var(--card);border-radius:22px 22px 0 0;padding:24px 20px 30px;width:100%;max-width:430px;max-height:92vh;overflow-y:auto;animation:su 0.35s ease;}
+  @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .md-handle{width:40px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 18px;}
+  .md h2{font-family:'Rajdhani',sans-serif;font-size:22px;color:var(--y);margin-bottom:4px;}
+  .md-sub{color:rgba(255,255,255,0.38);font-size:12px;margin-bottom:20px;}
+  .ma{display:flex;gap:9px;margin-top:18px;}
+  .mcbtn{flex:1;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:11px;color:rgba(255,255,255,0.5);font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;cursor:pointer;}
+  .msbtn{flex:2;padding:12px;background:linear-gradient(135deg,var(--y),var(--g));border:none;border-radius:11px;color:var(--n);font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;cursor:pointer;}
+  .ml{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mr{display:flex;gap:7px;}.mr .fc{flex:1;}
+  .fua{border:2px dashed rgba(255,215,0,0.2);border-radius:12px;padding:20px;text-align:center;cursor:pointer;color:rgba(255,255,255,0.32);font-size:13px;}
+  .fua .ui{font-size:26px;margin-bottom:5px;}
+
+  /* TOAST */
+  .tc{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;width:90%;max-width:380px;}
+  .toast{background:#1e2a45;border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--w);box-shadow:0 8px 28px rgba(0,0,0,0.5);display:flex;align-items:center;gap:9px;animation:tf 0.35s ease;}
+  .toast.success{border-color:rgba(40,167,69,0.4);}
+  .toast.error{border-color:rgba(220,53,69,0.4);}
+  @keyframes tf{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+  .es{text-align:center;padding:50px 20px;color:rgba(255,255,255,0.28);}
+  .es .ei{font-size:44px;margin-bottom:12px;}
+</style>
+</head>
+<body>
+<div class="tc" id="tc"></div>
+
+<!-- ===== MOBILE LOGIN ===== -->
+<div id="lp" class="page active">
+  <div class="mob-lhdr">
+    <div class="mob-lhdr-ic">🎓</div>
+    <div style="flex:1;min-width:0">
+      <h1>KINGS COLLEGE OF ENGINEERING</h1>
+      <p>AUTONOMOUS | AICTE | Anna University | NAAC Accredited</p>
+    </div>
+    <div class="mob-badge">KINGS<br><span style="font-size:16px;line-height:1">25</span><br>YRS</div>
+  </div>
+  <div class="mob-lbody">
+    <div class="mob-ltitle">🎪 EVENT PORTAL</div>
+    <div class="mob-lsub">Kings College of Engineering<br>Event Registration System</div>
+    <div class="rtog" style="width:100%;max-width:380px">
+      <button class="rbtn active" onclick="setRole('student')" id="roleStudent">👤 Student</button>
+      <button class="rbtn" onclick="setRole('staff')" id="roleStaff">🧑‍🏫 Staff</button>
+      <button class="rbtn" onclick="setRole('admin')" id="roleAdmin">🔐 Admin</button>
+    </div>
+    <div class="lform" style="max-width:380px">
+      <div id="gf">
+        <div class="fg"><label class="fl">Full Name</label><input type="text" class="fc" id="lName" placeholder="Your full name"></div>
+        <div class="fg"><label class="fl">College Name</label><input type="text" class="fc" id="lCollege" placeholder="College name"></div>
+        <div class="fg" id="deptBlock">
+          <label class="fl">Department (Kings Students)</label>
+          <div class="dg">
+            <div class="dc" onclick="pickDept(this,'AI&DS')">AI&amp;DS</div>
+            <div class="dc" onclick="pickDept(this,'IT')">IT</div>
+            <div class="dc" onclick="pickDept(this,'MECH')">MECH</div>
+            <div class="dc" onclick="pickDept(this,'EEE')">EEE</div>
+            <div class="dc" onclick="pickDept(this,'ECE')">ECE</div>
+            <div class="dc" onclick="pickDept(this,'CIVIL')">CIVIL</div>
+            <div class="dc" onclick="pickDept(this,'CSE')">CSE</div>
+            <div class="dc" onclick="pickDept(this,'OTHER')">Other</div>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Phone Number</label>
+          <div class="vg">
+            <input type="tel" class="fc" id="lPhone" placeholder="10-digit mobile" maxlength="10" inputmode="numeric">
+            <button class="vbtn" onclick="sendOTP('phone')">OTP</button>
+          </div>
+          <div class="otp-a" id="pOtpA"><input type="text" class="fc" id="pOtpIn" placeholder="Enter OTP" maxlength="6" inputmode="numeric"><div class="otp-m" id="pOtpM">✅ OTP: 1234 (demo)</div></div>
+        </div>
+        <div class="fg">
+          <label class="fl">Email Address</label>
+          <div class="vg">
+            <input type="email" class="fc" id="lEmail" placeholder="your@email.com" inputmode="email">
+            <button class="vbtn" onclick="sendOTP('email')">OTP</button>
+          </div>
+          <div class="otp-a" id="eOtpA"><input type="text" class="fc" id="eOtpIn" placeholder="Enter OTP" maxlength="6" inputmode="numeric"><div class="otp-m" id="eOtpM">✅ OTP: 5678 (demo)</div></div>
+        </div>
+      </div>
+      <div id="af" style="display:none">
+        <div class="fg"><label class="fl">Admin Password</label><input type="password" class="fc" id="adminPass" placeholder="Enter admin password"></div>
+      </div>
+      <div class="lerr" id="lErr"></div>
+      <button class="lbtn" onclick="doLogin()">🚀 LOGIN &amp; ENTER</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MOBILE APP ===== -->
+<div id="ap" class="page">
+  <!-- TOP HEADER -->
+  <div class="mob-hdr">
+    <div class="mob-hdr-ic">🎓</div>
+    <div class="mob-hdr-txt">
+      <h2>KINGS COLLEGE OF ENGINEERING</h2>
+      <p>Autonomous | AICTE | Anna University | NAAC | Pudukkottai</p>
+    </div>
+    <div class="mob-hdr-right">
+      <div class="mob-av" id="mobAv">U</div>
+      <button class="mob-out" onclick="doLogout()">Out</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="mob-main">
+    <!-- HOME -->
+    <div id="secHome">
+      <div class="dept-scroll" id="deptScroll">
+        <div class="dtab active" onclick="filterD('')" id="dAll">🏫 All</div>
+        <div class="dtab" onclick="filterD('AI&IT')" id="dAIIT">🤖 AI&amp;IT</div>
+        <div class="dtab" onclick="filterD('MECH')" id="dMECH">⚙️ MECH</div>
+        <div class="dtab" onclick="filterD('EEE')" id="dEEE">⚡ EEE</div>
+        <div class="dtab" onclick="filterD('ECE')" id="dECE">📡 ECE</div>
+        <div class="dtab" onclick="filterD('CIVIL')" id="dCIVIL">🏗️ CIVIL</div>
+        <div class="dtab" onclick="filterD('CSE')" id="dCSE">💻 CSE</div>
+      </div>
+      <div class="mob-ev-list" id="evList"></div>
+    </div>
+    <!-- MY -->
+    <div id="secMy" style="display:none">
+      <div class="stitle">📋 My Registrations</div>
+      <div id="myC"></div>
+    </div>
+    <!-- ADMIN -->
+    <div id="secAdmin" style="display:none">
+      <div class="stitle">⚙️ Admin</div>
+      <div class="mob-stats" id="mobStats"></div>
+      <div class="matabs">
+        <div class="matab active" onclick="swTab('Events',this)">📅 Events</div>
+        <div class="matab" onclick="swTab('Applications',this)">📝 Applications</div>
+        <div class="matab" onclick="swTab('Users',this)">👥 Users</div>
+      </div>
+      <!-- Events -->
+      <div class="map active" id="panelEvents">
+        <div class="mob-add-form">
+          <h3>➕ Add Event</h3>
+          <div class="fg"><label class="fl">Event Title</label><input type="text" class="fc" id="aTitle" placeholder="Competition / Workshop name"></div>
+          <div class="fg"><label class="fl">Department</label>
+            <select class="fc" id="aDept"><option>AI&IT</option><option>MECH</option><option>EEE</option><option>ECE</option><option>CIVIL</option><option>CSE</option><option>General</option></select>
+          </div>
+          <div class="fg"><label class="fl">Type</label>
+            <select class="fc" id="aType"><option>Technical Competition</option><option>Workshop</option><option>Seminar</option><option>Hackathon</option><option>Cultural Event</option><option>Sports Event</option><option>Paper Presentation</option></select>
+          </div>
+          <div class="fg"><label class="fl">Fee (₹)</label><input type="number" class="fc" id="aFee" value="0" min="0" inputmode="numeric"></div>
+          <div class="fg"><label class="fl">Date</label><input type="date" class="fc" id="aDate"></div>
+          <div class="fg"><label class="fl">Venue</label><input type="text" class="fc" id="aVenue" placeholder="Hall / Lab / Ground"></div>
+          <div class="fg"><label class="fl">Description</label><textarea class="fc" id="aDesc" placeholder="Brief description..."></textarea></div>
+          <button class="abtn add" onclick="addEv()">➕ Add Event</button>
+        </div>
+        <div id="adminEvCards"></div>
+      </div>
+      <!-- Applications -->
+      <div class="map" id="panelApplications">
+        <div class="sms-info">📱 SMS sent to <strong>+91 8220513258</strong> for every application</div>
+        <div id="appsC"></div>
+      </div>
+      <!-- Users -->
+      <div class="map" id="panelUsers">
+        <div id="usersC"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bot-nav">
+    <button class="bn active" onclick="showSec('home')" id="bnHome">
+      <div class="bic">🏠</div>Events
+    </button>
+    <button class="bn" onclick="showSec('my')" id="bnMy">
+      <div class="bic">📋</div>Mine
+    </button>
+    <button class="bn bn-admin" onclick="showSec('admin')" id="bnAdmin">
+      <div class="bic">⚙️</div>Admin
+    </button>
+  </nav>
+</div>
+
+<!-- APPLY MODAL (bottom sheet) -->
+<div class="mo" id="applyModal">
+  <div class="md">
+    <div class="md-handle"></div>
+    <h2>🎯 Register</h2>
+    <div class="md-sub" id="apSub">Fill in your team details</div>
+    <div class="fg"><label class="fl">Team / Participant Name</label><input type="text" class="fc" id="apTeam" placeholder="Team name or your name"></div>
+    <div class="fg"><label class="fl">Competition</label><input type="text" class="fc" id="apEvTitle" readonly style="opacity:0.65"></div>
+    <div class="fg"><label class="fl">Team Size</label>
+      <select class="fc" id="apSize" onchange="buildM()">
+        <option value="1">1 — Individual</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Members (Name &amp; Contact)</label><div class="ml" id="mList"></div></div>
+    <div class="fg">
+      <label class="fl">Payment Screenshot (Optional)</label>
+      <div class="fua" onclick="document.getElementById('payFile').click()">
+        <div class="ui">📷</div>
+        <div id="fLabel">Tap to upload screenshot</div>
+        <input type="file" id="payFile" accept="image/*" style="display:none" onchange="onF(this)">
+      </div>
+    </div>
+    <div class="ma">
+      <button class="mcbtn" onclick="closeM()">Cancel</button>
+      <button class="msbtn" onclick="submitApp()">✅ Submit</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+// ============================================================
+// 🔥 FIREBASE CONFIG — Same config as desktop file
+// ============================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, updateDoc, increment }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+// 👇 PASTE YOUR FIREBASE CONFIG HERE (same as desktop)
+const firebaseConfig = {
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "YOUR_PROJECT.firebaseapp.com",
+  projectId:         "YOUR_PROJECT_ID",
+  storageBucket:     "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId:             "YOUR_APP_ID"
+};
+
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const storage = getStorage(app);
+
+const COL_EVENTS = 'events';
+const COL_APPS   = 'applications';
+const COL_USERS  = 'users';
+
+const DEPT_ORDER = ['AI&IT','MECH','EEE','ECE','CIVIL','CSE','General'];
+let role='student', dept='', curUser=null, curEv=null, curDept='';
+let events=[], apps=[], users=[];
+
+// ============================================================
+// FIREBASE HELPERS
+// ============================================================
+async function fbAdd(col, data){
+  return await addDoc(collection(db, col), {...data, createdAt: serverTimestamp()});
+}
+async function fbDel(col, id){
+  await deleteDoc(doc(db, col, id));
+}
+async function fbIncrRegs(evDocId){
+  await updateDoc(doc(db, COL_EVENTS, evDocId), {regs: increment(1)});
+}
+async function uploadFile(file, id){
+  const r = ref(storage, `screenshots/${id}_${file.name}`);
+  await uploadBytes(r, file);
+  return await getDownloadURL(r);
+}
+
+function listenAll(){
+  onSnapshot(query(collection(db,COL_EVENTS),orderBy('createdAt','asc')), snap=>{
+    events=snap.docs.map(d=>({...d.data(),_id:d.id}));
+    renderEvs();
+    if(curUser?.role==='admin') renderAdmin();
+  });
+  onSnapshot(query(collection(db,COL_APPS),orderBy('createdAt','desc')), snap=>{
+    apps=snap.docs.map(d=>({...d.data(),_id:d.id}));
+    if(curUser?.role==='admin') renderAdmin();
+  });
+  onSnapshot(collection(db,COL_USERS), snap=>{
+    users=snap.docs.map(d=>({...d.data(),_id:d.id}));
+    if(curUser?.role==='admin') renderAdmin();
+  });
+}
+
+// ============================================================
+// LOADER
+// ============================================================
+function showLoader(msg='Loading...'){
+  let el=document.getElementById('fbLoader');
+  if(!el){
+    el=document.createElement('div');el.id='fbLoader';
+    el.style.cssText='position:fixed;inset:0;background:rgba(14,22,38,0.9);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+    el.innerHTML=`<div style="width:40px;height:40px;border:4px solid rgba(255,215,0,0.2);border-top-color:#FFD700;border-radius:50%;animation:spin 0.8s linear infinite"></div><div style="color:#FFD700;font-family:Nunito,sans-serif;font-size:14px;font-weight:700">${msg}</div>`;
+    const s=document.createElement('style');s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(s);document.body.appendChild(el);
+  } else { el.querySelector('div+div').textContent=msg; el.style.display='flex'; }
+}
+function hideLoader(){const el=document.getElementById('fbLoader');if(el)el.style.display='none';}
+
+// ============================================================
+// LOGIN
+// ============================================================
+function setRole(r){
+  role=r;
+  ['student','staff','admin'].forEach(x=>document.getElementById('role'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active',x===r));
+  document.getElementById('gf').style.display=r==='admin'?'none':'block';
+  document.getElementById('af').style.display=r==='admin'?'block':'none';
+  document.getElementById('deptBlock').style.display=r==='student'?'block':'none';
+}
+function pickDept(el,d){document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');dept=d;}
+function sendOTP(t){
+  if(t==='phone'){
+    const p=document.getElementById('lPhone').value.trim();
+    if(p.length!==10||isNaN(p)){toast('Enter valid 10-digit phone','error');return;}
+    document.getElementById('pOtpA').style.display='block';document.getElementById('pOtpM').style.display='block';
+    toast('📱 Demo OTP: 1234','success');
+  }else{
+    const e=document.getElementById('lEmail').value.trim();
+    if(!e.includes('@')){toast('Enter valid email','error');return;}
+    document.getElementById('eOtpA').style.display='block';document.getElementById('eOtpM').style.display='block';
+    toast('📧 Demo OTP: 5678','success');
+  }
+}
+async function doLogin(){
+  const err=document.getElementById('lErr');err.style.display='none';
+  if(role==='admin'){
+    if(document.getElementById('adminPass').value!=='dbm123'){err.textContent='⚠️ Incorrect password';err.style.display='block';return;}
+    curUser={name:'Admin',role:'admin',college:'Kings College of Engineering',dept:'Admin',phone:'',email:'admin@kingsengg.edu.in'};
+    enterApp();return;
+  }
+  const name=document.getElementById('lName').value.trim();
+  const college=document.getElementById('lCollege').value.trim();
+  const phone=document.getElementById('lPhone').value.trim();
+  const email=document.getElementById('lEmail').value.trim();
+  if(!name||!college||!phone||!email){err.textContent='⚠️ Fill all fields';err.style.display='block';return;}
+  if(document.getElementById('pOtpA').style.display!=='block'){err.textContent='⚠️ Send phone OTP';err.style.display='block';return;}
+  if(document.getElementById('pOtpIn').value!=='1234'){err.textContent='⚠️ Phone OTP wrong (1234)';err.style.display='block';return;}
+  if(document.getElementById('eOtpA').style.display!=='block'){err.textContent='⚠️ Send email OTP';err.style.display='block';return;}
+  if(document.getElementById('eOtpIn').value!=='5678'){err.textContent='⚠️ Email OTP wrong (5678)';err.style.display='block';return;}
+  curUser={name,role,college,dept:dept||'N/A',phone,email};
+  showLoader('Saving...');
+  try{ await fbAdd(COL_USERS,{name,role,college,dept:dept||'N/A',phone,email,joinedAt:new Date().toLocaleString('en-IN')}); }catch(e){console.warn(e);}
+  hideLoader();enterApp();
+}
+function enterApp(){
+  document.getElementById('lp').classList.remove('active');
+  document.getElementById('ap').classList.add('active');
+  document.getElementById('mobAv').textContent=curUser.name.charAt(0).toUpperCase();
+  if(curUser.role==='admin') document.getElementById('bnAdmin').style.display='flex';
+  showLoader('Loading events...');
+  listenAll();
+  setTimeout(()=>{ hideLoader(); if(curUser.role==='admin') showSec('admin'); else showSec('home'); },1200);
+  toast('👋 Welcome, '+curUser.name+'!','success');
+}
+function doLogout(){
+  curUser=null;
+  ['lName','lCollege','lPhone','lEmail','adminPass','pOtpIn','eOtpIn'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['pOtpA','eOtpA'].forEach(id=>document.getElementById(id).style.display='none');
+  document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));
+  dept='';events=[];apps=[];users=[];
+  document.getElementById('lp').classList.add('active');
+  document.getElementById('ap').classList.remove('active');
+  setRole('student');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showSec(s){
+  ['Home','My','Admin'].forEach(x=>document.getElementById('sec'+x).style.display='none');
+  document.getElementById('sec'+s.charAt(0).toUpperCase()+s.slice(1)).style.display='block';
+  ['bnHome','bnMy','bnAdmin'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('active');});
+  document.getElementById('bn'+s.charAt(0).toUpperCase()+s.slice(1))?.classList.add('active');
+  if(s==='admin') renderAdmin();
+  if(s==='my') renderMy();
+  document.querySelector('.mob-main').scrollTop=0;
+}
+function filterD(d){
+  curDept=d;
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  const key=d===''?'All':d.replace('&','');
+  document.getElementById('d'+key)?.classList.add('active');
+  renderEvs();
+}
+
+// ============================================================
+// EVENTS
+// ============================================================
+function renderEvs(){
+  const g=document.getElementById('evList');
+  let list=curDept?events.filter(e=>e.dept===curDept):[...events];
+  list.sort((a,b)=>(DEPT_ORDER.indexOf(a.dept)||99)-(DEPT_ORDER.indexOf(b.dept)||99));
+  if(!list.length){g.innerHTML='<div class="es"><div class="ei">🎪</div><p>No events</p></div>';return;}
+  g.innerHTML=list.map(ev=>`
+    <div class="mev">
+      <div class="mev-top">
+        <span class="dtag">${ev.dept}</span>
+        <span class="${ev.fee===0?'fee-f':'fee-p'}">${ev.fee===0?'FREE':'₹'+ev.fee}</span>
+      </div>
+      <div class="mev-title">${ev.title}</div>
+      <div class="mev-type">📌 ${ev.type}</div>
+      <div class="mev-meta">
+        <div class="mm">📅 ${fd(ev.date)}</div>
+        <div class="mm">📍 ${ev.venue}</div>
+        <div class="mm">👥 ${ev.regs||0}</div>
+      </div>
+      <div class="mev-desc">${ev.desc}</div>
+      <div class="mev-act">
+        <button class="apply-btn" onclick="openApply('${ev._id}')">🎯 Apply</button>
+        <button class="share-btn" onclick="shareEv('${ev._id}')">🔗</button>
+      </div>
+    </div>
+  `).join('');
+}
+function fd(d){if(!d)return'TBD';return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+function shareEv(id){
+  const ev=events.find(e=>e._id===id);
+  const t=`🎪 ${ev.title}\n${ev.type} | ${ev.dept}\n📅 ${fd(ev.date)} | 📍 ${ev.venue}\n💰 ${ev.fee===0?'FREE':'₹'+ev.fee}\nKings College - www.kingsengg.edu.in`;
+  if(navigator.share)navigator.share({title:ev.title,text:t});
+  else{navigator.clipboard.writeText(t);toast('📋 Copied!','success');}
+}
+
+// ============================================================
+// APPLY
+// ============================================================
+function openApply(id){
+  curEv=events.find(e=>e._id===id);
+  document.getElementById('apSub').textContent=curEv.title+' — '+curEv.dept;
+  document.getElementById('apEvTitle').value=curEv.title;
+  document.getElementById('apTeam').value=curUser?.name||'';
+  document.getElementById('apSize').value='1';
+  document.getElementById('fLabel').textContent='Tap to upload screenshot';
+  document.getElementById('payFile').value='';
+  buildM();
+  document.getElementById('applyModal').classList.add('open');
+}
+function closeM(){document.getElementById('applyModal').classList.remove('open');}
+function buildM(){
+  const n=parseInt(document.getElementById('apSize').value);
+  const l=document.getElementById('mList');l.innerHTML='';
+  for(let i=1;i<=n;i++) l.innerHTML+=`<div class="mr"><input type="text" class="fc" placeholder="Member ${i} name" id="mn${i}"><input type="tel" class="fc" placeholder="Contact" maxlength="10" inputmode="numeric" id="mp${i}"></div>`;
+}
+function onF(inp){document.getElementById('fLabel').textContent=inp.files[0]?'✅ '+inp.files[0].name:'Tap to upload screenshot';}
+async function submitApp(){
+  const team=document.getElementById('apTeam').value.trim();
+  if(!team){toast('Enter team name','error');return;}
+  const n=parseInt(document.getElementById('apSize').value);
+  const members=[];
+  for(let i=1;i<=n;i++) members.push({name:document.getElementById('mn'+i)?.value.trim()||'',phone:document.getElementById('mp'+i)?.value.trim()||''});
+  const fi=document.getElementById('payFile');const hasFile=fi.files&&fi.files.length>0;
+  showLoader('Submitting...');
+  try{
+    const appData={evId:curEv._id,evTitle:curEv.title,evDept:curEv.dept,team,members,user:curUser.name,uPhone:curUser.phone,uEmail:curUser.email,hasFile,fileName:hasFile?fi.files[0].name:null,screenshotUrl:null,time:new Date().toLocaleString('en-IN'),status:'pending'};
+    const ref2=await fbAdd(COL_APPS,appData);
+    if(hasFile){showLoader('Uploading...');const url=await uploadFile(fi.files[0],ref2.id);await updateDoc(doc(db,COL_APPS,ref2.id),{screenshotUrl:url});}
+    await fbIncrRegs(curEv._id);
+    const msg=`Kings Event Registration\nEvent: ${appData.evTitle} (${appData.evDept})\nTeam: ${appData.team}\nSize: ${appData.members.length}\n${appData.members.map((m,i)=>`${i+1}. ${m.name}${m.phone?' - '+m.phone:''}`).join('\n')}\nApplicant: ${appData.user} | ${appData.uPhone}\nTime: ${appData.time}`;
+    console.log('%c📱 SMS to 8220513258:\n'+msg,'color:#FFD700;background:#16213e;padding:8px;border-radius:4px');
+    closeM();toast('✅ Registered! Saved to Firebase.','success');
+  }catch(e){console.error(e);toast('❌ Failed. Check Firebase config.','error');}
+  hideLoader();
+}
+
+// ============================================================
+// MY REGS
+// ============================================================
+function renderMy(){
+  const c=document.getElementById('myC');
+  const mine=apps.filter(a=>a.uEmail===curUser?.email||a.user===curUser?.name);
+  if(!mine.length){c.innerHTML='<div class="es"><div class="ei">📋</div><p>No registrations yet</p></div>';return;}
+  c.innerHTML=mine.map(a=>`
+    <div class="abox">
+      <div class="abt">🏆 ${a.team} <span class="badge bp">${a.status}</span></div>
+      <div class="abm">📌 ${a.evTitle} (${a.evDept})<br>👥 ${a.members.length} member(s) | 🕒 ${a.time}<br>${a.members.map(m=>m.name+(m.phone?' ('+m.phone+')':'')).filter(x=>x.trim()).join(', ')||'—'}</div>
+      ${a.screenshotUrl?`<a href="${a.screenshotUrl}" target="_blank"><span class="ss-tag">📷 View Screenshot</span></a>`:(a.hasFile?`<span class="ss-tag">📷 ${a.fileName}</span>`:'')}
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// ADMIN
+// ============================================================
+function renderAdmin(){
+  document.getElementById('mobStats').innerHTML=`
+    <div class="msc"><div class="msi" style="background:rgba(255,215,0,0.1)">🎪</div><div><div class="msv">${events.length}</div><div class="msl">Events</div></div></div>
+    <div class="msc"><div class="msi" style="background:rgba(40,167,69,0.1)">📝</div><div><div class="msv">${apps.length}</div><div class="msl">Applications</div></div></div>
+    <div class="msc"><div class="msi" style="background:rgba(255,193,7,0.1)">⏳</div><div><div class="msv">${apps.filter(a=>a.status==='pending').length}</div><div class="msl">Pending</div></div></div>
+    <div class="msc"><div class="msi" style="background:rgba(0,123,255,0.1)">👥</div><div><div class="msv">${users.length}</div><div class="msl">Users</div></div></div>
+  `;
+  document.getElementById('adminEvCards').innerHTML=events.map(ev=>`
+    <div class="mob-app-card">
+      <div class="mac-title">${ev.title} <span class="badge bs">${ev.dept}</span></div>
+      <div class="mac-meta">${ev.type} | ${fd(ev.date)}<br>📍 ${ev.venue} | ${ev.fee===0?'FREE':'₹'+ev.fee} | 👥 ${ev.regs||0}</div>
+      <div class="mac-actions"><button class="abtn del" onclick="delEv('${ev._id}')">🗑 Delete</button></div>
+    </div>
+  `).join('');
+  const ac=document.getElementById('appsC');
+  if(!apps.length){ac.innerHTML='<div class="es"><div class="ei">📝</div><p>No applications</p></div>';}
+  else ac.innerHTML=apps.map(a=>`
+    <div class="mob-app-card">
+      <div class="mac-title">🏆 ${a.team} <span class="badge bp">${a.status}</span></div>
+      <div class="mac-meta">📌 ${a.evTitle} (${a.evDept})<br>👤 ${a.user} | 📱 ${a.uPhone}<br>👥 ${a.members.length}: ${a.members.map(m=>m.name).filter(Boolean).join(', ')}<br>🕒 ${a.time}</div>
+      ${a.screenshotUrl?`<a href="${a.screenshotUrl}" target="_blank"><span class="mac-ss">📷 View</span></a>`:(a.hasFile?`<span class="mac-ss">📷 ${a.fileName}</span>`:'')}
+    </div>
+  `).join('');
+  document.getElementById('usersC').innerHTML=users.length?users.map(u=>`
+    <div class="mob-user-card">
+      <div class="muc-av">${u.name.charAt(0).toUpperCase()}</div>
+      <div><div class="muc-name">${u.name} <span class="badge ${u.role==='staff'?'bst':'bs'}">${u.role}</span></div>
+      <div class="muc-info">${u.college} | ${u.dept}<br>${u.phone} | ${u.email}</div></div>
+    </div>
+  `).join(''):'<div class="es"><div class="ei">👥</div><p>No users yet</p></div>';
+}
+function swTab(name,btn){
+  document.querySelectorAll('.matab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('.map').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel'+name).classList.add('active');renderAdmin();
+}
+async function addEv(){
+  const title=document.getElementById('aTitle').value.trim();
+  const venue=document.getElementById('aVenue').value.trim();
+  if(!title||!venue){toast('Fill title and venue','error');return;}
+  showLoader('Adding event...');
+  try{
+    await fbAdd(COL_EVENTS,{title,dept:document.getElementById('aDept').value,type:document.getElementById('aType').value,fee:parseInt(document.getElementById('aFee').value)||0,date:document.getElementById('aDate').value,venue,desc:document.getElementById('aDesc').value.trim()||'No description.',regs:0});
+    ['aTitle','aVenue','aDesc'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('aFee').value='0';
+    toast('✅ Event added to Firebase!','success');
+  }catch(e){console.error(e);toast('❌ Failed. Check Firebase config.','error');}
+  hideLoader();
+}
+async function delEv(id){
+  if(!confirm('Delete?'))return;
+  showLoader('Deleting...');
+  try{await fbDel(COL_EVENTS,id);toast('🗑️ Deleted','success');}catch(e){toast('❌ Failed','error');}
+  hideLoader();
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg,type='info'){
+  const c=document.getElementById('tc');const t=document.createElement('div');
+  t.className='toast '+(type||'');t.textContent=msg;c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='0.4s';setTimeout(()=>t.remove(),400);},3000);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded',()=>{
+  const td=new Date().toISOString().split('T')[0];
+  document.getElementById('aDate').min=td;
+  document.getElementById('aDate').value=td;
+  window.setRole=setRole; window.pickDept=pickDept; window.sendOTP=sendOTP;
+  window.doLogin=doLogin; window.doLogout=doLogout; window.showSec=showSec;
+  window.filterD=filterD; window.openApply=openApply; window.closeM=closeM;
+  window.buildM=buildM; window.onF=onF; window.submitApp=submitApp;
+  window.swTab=swTab; window.addEv=addEv; window.delEv=delEv; window.shareEv=shareEv;
+});
+</script>
+</body>
+</html>
